@@ -13,6 +13,9 @@ const userRoutes = require('./src/app/api/routes/Users');
 const cartRoutes = require('./src/app/api/routes/Carts');
 const commentRoutes = require('./src/app/api/routes/Comments');
 const topicRoutes = require('./src/app/api/routes/Topics');
+const orderRoutes = require('./src/app/api/routes/Orders');
+const noticeRoutes = require('./src/app/api/routes/Notification');
+
 
 app.use(cors(corsOptions))
 app.use(bp.json())
@@ -23,6 +26,8 @@ app.use('/users', userRoutes);
 app.use('/carts', cartRoutes);
 app.use('/comments', commentRoutes);
 app.use('/topics', topicRoutes);
+app.use('/orders', orderRoutes);
+app.use('/notices', noticeRoutes);
 
 connection.connect(err => {
     if (err) throw err;
