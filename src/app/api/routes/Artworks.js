@@ -58,7 +58,12 @@ router
     })
     .get('', (req, res, next) => {
         // get all artworks
-        connection.query('SELECT * FROM Artwork  A where  A.status = 1', (err, results, fields) => {
+        connection.query(`
+            SELECT A.*, U.first_name, U.last_name
+            FROM Artwork as A
+                     INNER JOIN User as U on A.created_by = U.id
+            WHERE A.status = 1
+        `, (err, results, fields) => {
             if (err) {
                 res.status(500).json({
                     message: "Error"
@@ -194,9 +199,35 @@ router
                     message: "Error"
                 });
             } else {
-                res.status(200).json({
-                    message: "Delete artwork success"
-                });
+                const sqlArtworkSaved = `
+                    DELETE
+                    FROM ArtworkSaved
+                    WHERE artwork_id = ?
+                `
+                const sqlCart = `
+                    DELETE
+                    FROM Cart
+                    WHERE artwork_id = ?
+                `
+                connection.query(sqlArtworkSaved, [id], (err, results, fields) => {
+                    if (err) {
+                        res.status(500).json({
+                            message: "Error"
+                        });
+                    } else {
+                        connection.query(sqlCart, [id], (err, results, fields) => {
+                            if (err) {
+                                res.status(500).json({
+                                    message: "Error"
+                                });
+                            } else {
+                                res.status(200).json({
+                                    message: "Delete artwork success"
+                                });
+                            }
+                        });
+                    }
+                })
             }
         });
     })

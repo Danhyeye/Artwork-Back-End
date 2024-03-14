@@ -18,15 +18,15 @@ router
     })
     .post('', (req, res, next) => {
         // add cart to user
-        const {userId, artworkId, comment} = req.body;
-        connection.query('INSERT INTO comments (user_id, artwork_id, comment) VALUES (?,?,?)', [userId, artworkId, comment], (err, results, fields) => {
+        const {user_id, artworkId, comment} = req.body;
+        connection.query('INSERT INTO comments (user_id, artwork_id, comment) VALUES (?,?,?)', [user_id, artworkId, comment], (err, results, fields) => {
             if (err) {
                 res.status(500).json({
-                    message: "Error"
+                    message: "Error" + err.message
                 });
             } else {
                 res.status(201).json({
-                    message: "Add cart success"
+                    message: "Add comment success"
                 });
             }
         });

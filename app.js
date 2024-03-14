@@ -15,6 +15,7 @@ const commentRoutes = require('./src/app/api/routes/Comments');
 const topicRoutes = require('./src/app/api/routes/Topics');
 const orderRoutes = require('./src/app/api/routes/Orders');
 const noticeRoutes = require('./src/app/api/routes/Notification');
+const revenueRoutes = require('./src/app/api/routes/Revenue');
 
 
 app.use(cors(corsOptions))
@@ -28,6 +29,7 @@ app.use('/comments', commentRoutes);
 app.use('/topics', topicRoutes);
 app.use('/orders', orderRoutes);
 app.use('/notices', noticeRoutes);
+app.use('/revenue', revenueRoutes);
 
 connection.connect(err => {
     if (err) throw err;
