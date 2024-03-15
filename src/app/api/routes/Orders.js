@@ -1,23 +1,24 @@
 const express = require('express');
-const {connection} = require("../../../config/db");
+const { connection } = require("../../../config/db");
 const router = express.Router();
 
 router
     .get('/user', (req, res, next) => {
         // get orders with orderdetails by userId
-        const {userId} = req.query;
+        const { userId } = req.query;
         const sql = `
-            SELECT o.*, u.first_name, u.last_name, p.id atrwork_id, p.title, p.src, p.price
+            SELECT o.*, u.first_name, u.last_name, p.id atrwork_id, p.title, p.src, p.price,  c.first_name  firstname, c.last_name  lastname
             FROM \`order\` o
                      LEFT JOIN OrderDetails od ON o.id = od.order_id
                      LEFT JOIN Artwork p ON od.artwork_id = p.id
+                     LEFT JOIN User c ON c.id = p.created_by
                      LEFT JOIN User u ON u.id = o.user_id
             WHERE o.user_id = ?
         `
         connection.query(sql, [userId], (err, results, fields) => {
             if (err) {
                 res.status(500).json({
-                    message: "Error"
+                    message: "Error" + err.message
                 });
             } else {
                 const orders = {};
@@ -47,14 +48,16 @@ router
                         artwork_id: row.artwork_id,
                         title: row.title,
                         src: row.src,
-                        price: row.price
+                        price: row.price,
+                        firstname: row.firstname,
+                        lastname: row.lastname,
                     });
                     // res.status(200).json(ordersArray);
                 })
                 const ordersArray = Object.values(orders);
                 res.status(200).json(ordersArray);
             }
-        });
+        })
     })
     .get('', (req, res, next) => {
         const sql = `
