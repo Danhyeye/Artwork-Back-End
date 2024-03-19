@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {connection} = require('../../../config/db');
+const { connection } = require('../../../config/db');
 
 router
     .post('/login', (req, res, next) => {
         // login
         console.log(req.body)
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         connection.query('SELECT * FROM user WHERE email = ? AND password = ?', [email, password], (err, results, fields) => {
             if (err) {
                 res.status(500).json({
@@ -26,21 +26,36 @@ router
     .post('/register', (req, res, next) => {
         // register
         console.log(req.body);
-        const {username, password, firstName, lastName, email} = req.body;
-        connection.query('INSERT INTO user (username, password,first_name,last_name,email) VALUES (?,?,?,?, ?)', [username, password, firstName, lastName, email], (err, results, fields) => {
+        const { username, password, firstName, lastName, email } = req.body;
+
+        connection.query('SELECT * FROM user WHERE email like ?', [email], (err, results, fields) => {
             if (err) {
                 res.status(500).json({
                     message: "Error"
                 });
             } else {
-                res.status(201).json({
-                    message: "Register success"
-                });
+                if (results.length > 0) {
+                    res.status(400).json({
+                        message: "Email already exists in the database"
+                    });
+                } else {
+                    connection.query('INSERT INTO user (username, password, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)', [username, password, firstName, lastName, email], (err, results, fields) => {
+                        if (err) {
+                            res.status(500).json({
+                                message: "Error"
+                            });
+                        } else {
+                            res.status(201).json({
+                                message: "Registration successful"
+                            });
+                        }
+                    });
+                }
             }
         });
     })
     .put('/edit', (req, res, next) => {
-        const {username, first_name, last_name, email} = req.body;
+        const { username, first_name, last_name, email } = req.body;
         connection.query('UPDATE user SET username= ?, first_name=?,last_name=?,email=?', [username, first_name, last_name, email], (err, results, fields) => {
             if (err) {
                 res.status(500).json({
