@@ -16,6 +16,7 @@ const topicRoutes = require('./src/app/api/routes/Topics');
 const orderRoutes = require('./src/app/api/routes/Orders');
 const noticeRoutes = require('./src/app/api/routes/Notification');
 const revenueRoutes = require('./src/app/api/routes/Revenue');
+const {createProxyMiddleware} = require("http-proxy-middleware");
 
 
 app.use(cors(corsOptions))
@@ -30,6 +31,22 @@ app.use('/topics', topicRoutes);
 app.use('/orders', orderRoutes);
 app.use('/notices', noticeRoutes);
 app.use('/revenue', revenueRoutes);
+
+// API để đặt cấu hình proxy
+app.post('/api/set-proxy', (req, res) => {
+    const { proxyPath, target } = req.body;
+
+    if (!proxyPath || !target) {
+        return res.status(400).json({ error: 'Cần cung cấp proxyPath và target' });
+    }
+    app.use(proxyPath, createProxyMiddleware({
+        target: target,
+        changeOrigin: true,
+    }));
+
+    res.json({ message: `Proxy được thiết lập tới ${target} tại ${proxyPath}` });
+});
+
 
 connection.connect(err => {
     if (err) throw err;

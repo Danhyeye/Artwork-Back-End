@@ -1,11 +1,11 @@
 const express = require('express');
-const { connection } = require("../../../config/db");
+const {connection} = require("../../../config/db");
 const router = express.Router();
 
 router
     .get('/user', (req, res, next) => {
         // get orders with orderdetails by userId
-        const { userId } = req.query;
+        const {userId} = req.query;
         const sql = `
             SELECT o.*, u.first_name, u.last_name, p.id atrwork_id, p.title, p.src, p.price,  c.first_name  firstname, c.last_name  lastname
             FROM \`order\` o
@@ -57,7 +57,7 @@ router
                 const ordersArray = Object.values(orders);
                 res.status(200).json(ordersArray);
             }
-        })
+        });
     })
     .get('', (req, res, next) => {
         const sql = `
