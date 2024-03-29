@@ -163,11 +163,10 @@ VALUES ('Anime'),
 
 INSERT INTO `User` (username, password, first_name, last_name, email)
 VALUES ('Danhyeye', '123456', 'Dan', 'Hyeye', 'danhyeye@gmail.com'),
-       ('Bui Thanh', '1234567', 'Thanh', 'Bui', 'manhthanh@gmail.com');
 
 
 INSERT INTO `User` (username, password, first_name, last_name, email,role)
-VALUES ('ngoclnb1811', '123456', 'Lê', 'Ngọc', 'ngoclnb1811@gmail.com','ADMIN');
+VALUES ('ADMIN', '123456', 'Admin', 'Page', 'danhyeye420@gmail.com','ADMIN');
 
 INSERT INTO `Artwork` (src, title, price, description, created_by)
 VALUES ('https://i.pinimg.com/564x/56/01/e7/5601e72265b56929fe04b2a2a72fa37a.jpg', 'A normal day in the anime world', 10, 'This is my first artwork', 1),
